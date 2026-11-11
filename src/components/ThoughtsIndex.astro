@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import ThoughtCard from './ThoughtCard.astro';
+import { TOPIC_IDS, TOPIC_LABELS } from '../data/topics';
+import type { Thought } from '../lib/content';
+
+interface Props {
+  items: Thought[];
+  active: string;
+  title?: string;
+}
+
+const { items, active, title = 'Thoughts' } = Astro.props;
+---
+<Base title={title} description="Essays, case studies, videos and talks on data products, core banking, payments, platforms and system design.">
+  <header class="page-head">
+    <h1>Thoughts</h1>
+    <p class="page-intro">Essays, case studies, videos and talks on data products, core banking, payments, platforms and system design.</p>
+  </header>
+  <nav class="tabs" aria-label="Filter by topic">
+    <a class="caps" href="/thoughts/" aria-current={active === 'all' ? 'page' : undefined}>All</a>
+    {TOPIC_IDS.map((id) => (
+      <a class="caps" href={`/thoughts/topic/${id}/`} aria-current={active === id ? 'page' : undefined}>{TOPIC_LABELS[id]}</a>
+    ))}
+  </nav>
+  {active === 'talks' && (
+    <p class="filter-note">Showing talks only <a class="caps text-link" href="/thoughts/">Show all</a></p>
+  )}
+  {items.length > 0 ? (
+    <div class="grid">
+      {items.map((t) => <ThoughtCard t={t} level={2} />)}
+    </div>
+  ) : (
+    <div class="empty">
+      <p>{active === 'all' ? 'The first thoughts are on their way.' : 'Nothing here yet.'}</p>
+      {active !== 'all' && <a class="caps text-link" href="/thoughts/">Show all</a>}
+    </div>
+  )}
+</Base>

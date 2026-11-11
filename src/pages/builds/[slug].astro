@@ -1,0 +1,31 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
+import { getBuilds, STATUS_LABELS } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const all = await getBuilds();
+  return all.map((b) => ({ params: { slug: b.id }, props: { b } }));
+}
+
+const { b } = Astro.props;
+const { Content } = await render(b);
+const kind = b.data.status === 'concept' ? 'Concept prototype' : 'Project';
+---
+<Base title={b.data.title} description={b.data.summary}>
+  <article class="article">
+    <a class="caps text-link back" href="/builds/">← All builds</a>
+    <div class="article-cover"><Cover cover={b.data.cover} motif="browser" /></div>
+    <h1 class="article-title">{b.data.title}</h1>
+    {b.data.draft && <p class="draft-note">Draft: visible only on your computer.</p>}
+    <dl class="props">
+      <dt>Kind</dt><dd>{kind}</dd>
+      <dt>Status</dt><dd>{STATUS_LABELS[b.data.status]}</dd>
+      {b.data.started && <><dt>Started</dt><dd>{b.data.started}</dd></>}
+      <dt>Stack</dt><dd>{b.data.stack.join(' · ')}</dd>
+      {b.data.link && <><dt>Link</dt><dd><a class="caps" href={b.data.link}>{b.data.linkLabel ?? 'Open'} →</a></dd></>}
+    </dl>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>

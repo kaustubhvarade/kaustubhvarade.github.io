@@ -1,0 +1,28 @@
+---
+import { SITE, SOCIAL, NEWSLETTER } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+<div class="wrap">
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div>
+        <h2>Get new thoughts by email</h2>
+        <p>One short note a week. Unsubscribe anytime.</p>
+      </div>
+      <form class="subscribe" action={NEWSLETTER.action || undefined} method="post">
+        <label class="sr-only" for="footer-email">Email address</label>
+        <input class="field" id="footer-email" name="email" type="email" placeholder="you@company.com" required />
+        <button class="btn caps" type="submit">Subscribe</button>
+      </form>
+    </div>
+    <div class="footer-bottom">
+      <ul>
+        {SOCIAL.map((link) => (
+          <li><a class="caps" href={link.href} rel="me noopener" target="_blank">{link.label}</a></li>
+        ))}
+      </ul>
+      <p>© {year} {SITE.name}</p>
+    </div>
+  </footer>
+</div>

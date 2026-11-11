@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+
+const ERAS = [
+  { years: '2010–2014', title: 'Channels · Software developer', detail: 'Built internet banking on Oracle FLEXCUBE for banks in the Gulf and Asia, and full-stack Java products before that.' },
+  { years: '2016–2023', title: 'Core and payment rails · Product manager', detail: 'Digital ISA onboarding and Faster Payments at Metro Bank, prepaid accounts for gig workers with BetterMoney, and the PayZapp rebuild for HDFC Bank and Pluxee in the Philippines and Vietnam.' },
+  { years: '2024–now', title: 'Data and AI · Senior product manager', detail: 'Governed data products and AI governance for large UK and European banks, plus hands-on agentic AI builds. AWS Certified AI Practitioner.' },
+];
+---
+<Base title="About me" description="Tech enabler, engineer and product manager: my career arc and how to reach me.">
+  <section class="about">
+    <h1>About me</h1>
+    <p class="about-lede">I'm a tech enabler: I turn complex technology into products that work. I started as a software engineer building internet banking, moved into product management after an MBA, and have spent thirteen years building technology for banks and fintechs across EMEA and APAC, from core platforms and payments to data and AI. I work comfortably on both sides of the table, from system design and code to product strategy and business outcomes, and I'm now bringing that range to organisations in and beyond financial services.</p>
+
+    <h2>Career arc</h2>
+    {ERAS.map((era) => (
+      <div class="era">
+        <p class="era-years">{era.years}</p>
+        <div class="era-body">
+          <h3>{era.title}</h3>
+          <p>{era.detail}</p>
+        </div>
+      </div>
+    ))}
+
+    <div class="about-block">
+      <h2>Speaking</h2>
+      <p>I practise public speaking with Toastmasters, explaining technology to audiences who don't work in it.</p>
+      <a class="caps text-link" href="/thoughts/talks/">See my talks →</a>
+    </div>
+
+    <div class="about-block">
+      <h2>Connect with me</h2>
+      <p style="margin-bottom: 20px">Whether you're hiring, looking for advice or planning an event, I'd like to hear from you.</p>
+      <div class="actions">
+        {SITE.email && <a class="btn caps" href={`mailto:${SITE.email}`}>Email me</a>}
+        <a class="btn btn-outline caps" href={SITE.linkedin}>LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</Base>

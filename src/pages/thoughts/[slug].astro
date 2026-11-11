@@ -1,0 +1,77 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
+import { TOPIC_MOTIFS } from '../../data/topics';
+import { getThoughts, TYPE_LABELS, topicLabels, formatDate, lengthLabel, isMedia, youtubeId } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const all = await getThoughts();
+  return all.map((t) => ({ params: { slug: t.id }, props: { t, all } }));
+}
+
+const { t, all } = Astro.props;
+const { Content, headings } = await render(t);
+const toc = headings.filter((h) => h.depth === 2);
+const motif = t.data.type === 'talk' ? 'mic' : TOPIC_MOTIFS[t.data.topics[0]];
+const video = youtubeId(t.data.youtube);
+const next = t.data.series && t.data.part
+  ? all.find((o) => o.data.series === t.data.series && o.data.part === (t.data.part ?? 0) + 1)
+  : undefined;
+---
+<Base title={t.data.title} description={t.data.summary}>
+  <article class="article">
+    <a class="caps text-link back" href="/thoughts/">← All thoughts</a>
+    <div class="article-cover"><Cover cover={t.data.cover} motif={motif} /></div>
+    <h1 class="article-title">{t.data.title}</h1>
+    {t.data.draft && <p class="draft-note">Draft: visible only on your computer.</p>}
+
+    <dl class="props">
+      <dt>Published</dt><dd>{formatDate(t.data.date)}</dd>
+      <dt>Type</dt><dd>{TYPE_LABELS[t.data.type]}</dd>
+      <dt>Topics</dt><dd>{topicLabels(t.data.topics)}</dd>
+      {t.data.series && <><dt>Series</dt><dd>{t.data.series}{t.data.part && ` · Part ${t.data.part}`}</dd></>}
+      {t.data.event && <><dt>Event</dt><dd>{t.data.event}</dd></>}
+      <dt>Length</dt><dd>{lengthLabel(t)}</dd>
+    </dl>
+
+    {video ? (
+      <div class="video">
+        <iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={t.data.title} loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    ) : isMedia(t) && (
+      <div class="video video-empty"><p>Video coming soon</p></div>
+    )}
+
+    {toc.length > 1 && (
+      <nav class="toc" aria-label="On this page">
+        <p>On this page</p>
+        <ol>
+          {toc.map((h, i) => <li><a class="caps" href={`#${h.slug}`}>{i + 1}. {h.text}</a></li>)}
+        </ol>
+      </nav>
+    )}
+
+    {t.data.takeaways && (
+      <aside class="callout">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#111111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18h6" /><path d="M10 21h4" />
+          <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+        </svg>
+        <div>
+          <p class="callout-title">Key takeaways</p>
+          <ul>{t.data.takeaways.map((k) => <li>{k}</li>)}</ul>
+        </div>
+      </aside>
+    )}
+
+    <div class="prose"><Content /></div>
+
+    {next && (
+      <div class="next">
+        <p>Next in the series: {next.data.title}</p>
+        <a class="caps text-link" href={`/thoughts/${next.id}/`}>Read part {next.data.part} →</a>
+      </div>
+    )}
+  </article>
+</Base>

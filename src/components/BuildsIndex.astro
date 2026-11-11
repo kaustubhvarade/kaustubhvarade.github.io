@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import BuildCard from './BuildCard.astro';
+import type { Build } from '../lib/content';
+
+interface Props {
+  items: Build[];
+  active: 'all' | 'projects' | 'concepts';
+  title?: string;
+}
+
+const { items, active, title = 'Builds' } = Astro.props;
+const TABS = [
+  { id: 'all', label: 'All', href: '/builds/' },
+  { id: 'projects', label: 'Projects', href: '/builds/projects/' },
+  { id: 'concepts', label: 'Concept prototypes', href: '/builds/concepts/' },
+];
+---
+<Base title={title} description="Projects I build to stay hands-on, and concept prototypes that make an idea tangible.">
+  <header class="page-head">
+    <h1>Builds</h1>
+    <p class="page-intro">Projects I build to stay hands-on, and concept prototypes that make an idea tangible. Code lives on GitHub; explainer videos will follow.</p>
+  </header>
+  <nav class="tabs" aria-label="Filter by kind">
+    {TABS.map((tab) => (
+      <a class="caps" href={tab.href} aria-current={active === tab.id ? 'page' : undefined}>{tab.label}</a>
+    ))}
+  </nav>
+  {items.length > 0 ? (
+    <div class="grid">
+      {items.map((b) => <BuildCard b={b} level={2} />)}
+    </div>
+  ) : (
+    <div class="empty">
+      <p>Nothing here yet.</p>
+      <a class="caps text-link" href="/builds/">Show all</a>
+    </div>
+  )}
+</Base>

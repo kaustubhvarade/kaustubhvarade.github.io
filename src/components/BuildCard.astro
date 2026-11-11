@@ -1,0 +1,27 @@
+---
+import Cover from './Cover.astro';
+import { type Build, STATUS_LABELS } from '../lib/content';
+
+interface Props {
+  b: Build;
+  level?: 2 | 3;
+}
+
+const { b, level = 3 } = Astro.props;
+const H = level === 2 ? 'h2' : 'h3';
+const kind = b.data.status === 'concept' ? 'Concept prototype' : 'Project';
+const BADGE: Record<string, string> = { live: 'badge badge-live', 'in-progress': 'badge', concept: 'badge badge-concept' };
+---
+<article class="card">
+  <div class="card-cover">
+    <Cover cover={b.data.cover} motif="browser" />
+  </div>
+  <div class="badges">
+    <span class={BADGE[b.data.status]}>{STATUS_LABELS[b.data.status]}</span>
+    <span class="card-meta">{kind}</span>
+  </div>
+  <H class="card-title">{b.data.title}</H>
+  <p class="card-summary">{b.data.summary}</p>
+  <p class="card-meta">{b.data.stack.join(' · ')}</p>
+  <a class="caps text-link card-end" href={`/builds/${b.id}/`} aria-label={`View build: ${b.data.title}`}>View build →</a>
+</article>

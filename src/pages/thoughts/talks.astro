@@ -1,0 +1,7 @@
+---
+import ThoughtsIndex from '../../components/ThoughtsIndex.astro';
+import { getThoughts } from '../../lib/content';
+
+const items = (await getThoughts()).filter((t) => t.data.type === 'talk');
+---
+<ThoughtsIndex items={items} active="talks" title="Talks" />

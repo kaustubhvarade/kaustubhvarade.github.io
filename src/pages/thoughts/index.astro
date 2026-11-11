@@ -1,0 +1,7 @@
+---
+import ThoughtsIndex from '../../components/ThoughtsIndex.astro';
+import { getThoughts } from '../../lib/content';
+
+const items = await getThoughts();
+---
+<ThoughtsIndex items={items} active="all" />

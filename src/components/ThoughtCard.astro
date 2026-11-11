@@ -1,0 +1,33 @@
+---
+import Cover from './Cover.astro';
+import { TOPIC_MOTIFS } from '../data/topics';
+import { type Thought, TYPE_LABELS, topicLabels, isMedia, formatDate, lengthLabel, ctaLabel } from '../lib/content';
+
+interface Props {
+  t: Thought;
+  level?: 2 | 3;
+}
+
+const { t, level = 3 } = Astro.props;
+const H = level === 2 ? 'h2' : 'h3';
+const motif = t.data.type === 'talk' ? 'mic' : TOPIC_MOTIFS[t.data.topics[0]];
+const cta = ctaLabel(t);
+---
+<article class="card">
+  <div class="card-cover">
+    <Cover cover={t.data.cover} motif={motif} />
+    {isMedia(t) && (
+      <svg class="media-badge" viewBox="0 0 64 64" role="img" aria-label="Contains video">
+        <circle cx="32" cy="32" r="28" fill="#ffffff" stroke="#111111" stroke-width="3" />
+        <polygon points="26,20 26,44 46,32" fill="#111111" />
+      </svg>
+    )}
+  </div>
+  <p class="card-meta">{TYPE_LABELS[t.data.type]} · {topicLabels(t.data.topics)}</p>
+  <H class="card-title">{t.data.title}</H>
+  <p class="card-summary">{t.data.summary}</p>
+  <div class="card-foot">
+    <p class="card-meta">{formatDate(t.data.date)} · {lengthLabel(t)}</p>
+    <a class="caps text-link" href={`/thoughts/${t.id}/`} aria-label={`${cta}: ${t.data.title}`}>{cta} →</a>
+  </div>
+</article>

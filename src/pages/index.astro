@@ -1,16 +1,46 @@
 ---
----
+import Base from '../layouts/Base.astro';
+import ThoughtCard from '../components/ThoughtCard.astro';
+import BuildCard from '../components/BuildCard.astro';
+import { SITE } from '../data/site';
+import { getThoughts, getBuilds } from '../lib/content';
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Home</title>
-	</head>
-	<body>
-		<h1>Kaustubh Varade Website In Progress.....</h1>
-	</body>
-</html>
+const thoughts = (await getThoughts()).slice(0, 3);
+const builds = (await getBuilds()).slice(0, 3);
+---
+<Base>
+  <section class="hero">
+    <p class="eyebrow">Tech enabler · Engineer and product manager</p>
+    <h1>I turn complex technology into products that work: platforms, data and payments, as both engineer and product manager.</h1>
+    <p class="lede">Thirteen years building technology for banks and fintechs across EMEA and APAC, from internet banking to core platforms, payments, data and AI.</p>
+  </section>
+
+  {thoughts.length > 0 && (
+    <section class="section">
+      <div class="section-head">
+        <h2>Latest thoughts</h2>
+        <a class="caps text-link" href="/thoughts/">All thoughts →</a>
+      </div>
+      <div class="grid">{thoughts.map((t) => <ThoughtCard t={t} />)}</div>
+    </section>
+  )}
+
+  {builds.length > 0 && (
+    <section class="section">
+      <div class="section-head">
+        <h2>Latest builds</h2>
+        <a class="caps text-link" href="/builds/">All builds →</a>
+      </div>
+      <div class="grid">{builds.map((b) => <BuildCard b={b} />)}</div>
+    </section>
+  )}
+
+  <section class="section">
+    <h2>Connect with me</h2>
+    <p class="section-text">Whether you're hiring, looking for advice or planning an event, I'd like to hear from you.</p>
+    <div class="actions">
+      {SITE.email && <a class="btn caps" href={`mailto:${SITE.email}`}>Email me</a>}
+      <a class="btn btn-outline caps" href={SITE.linkedin}>LinkedIn</a>
+    </div>
+  </section>
+</Base>

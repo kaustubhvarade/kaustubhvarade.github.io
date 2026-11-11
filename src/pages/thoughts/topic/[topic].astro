@@ -1,0 +1,13 @@
+---
+import ThoughtsIndex from '../../../components/ThoughtsIndex.astro';
+import { TOPIC_IDS, TOPIC_LABELS, type TopicId } from '../../../data/topics';
+import { getThoughts } from '../../../lib/content';
+
+export function getStaticPaths() {
+  return TOPIC_IDS.map((topic) => ({ params: { topic } }));
+}
+
+const topic = Astro.params.topic as TopicId;
+const items = (await getThoughts()).filter((t) => t.data.topics.includes(topic));
+---
+<ThoughtsIndex items={items} active={topic} title={`${TOPIC_LABELS[topic]} · Thoughts`} />

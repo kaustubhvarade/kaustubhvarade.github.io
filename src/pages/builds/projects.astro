@@ -1,0 +1,7 @@
+---
+import BuildsIndex from '../../components/BuildsIndex.astro';
+import { getBuilds } from '../../lib/content';
+
+const items = (await getBuilds()).filter((b) => b.data.status !== 'concept');
+---
+<BuildsIndex items={items} active="projects" title="Projects · Builds" />
