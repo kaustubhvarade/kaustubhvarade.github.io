@@ -157,3 +157,10 @@ h1, h2, h3 { font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
 /* Progress log callout on build pages */
 .prose h2#progress-log + ul { margin: 0; padding: 18px 20px 18px 40px; border-radius: 8px; background: var(--callout); font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--ink-2); }
 .prose h2#progress-log + ul li { margin-bottom: 4px; }
+
+/* Whole card is clickable: the card's link stretches over the card */
+.card { position: relative; cursor: pointer; }
+.card-foot a::after, .card-end::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.card-cover { transition: border-color 0.15s ease; }
+.card:hover .card-cover { border-color: var(--ink); }
+.card:hover .card-foot a, .card:hover .card-end { text-decoration: underline; text-underline-offset: 4px; }
