@@ -9,7 +9,7 @@ const isImage = cover?.startsWith('/');
 const key = (!isImage && cover) || motif;
 const BG: Record<string, string> = {
   layers: '#FBF1D6', phone: '#FDE3D3', card: '#DDF1E4', platform: '#DCE8FB', system: '#DDF1E4',
-  recon: '#FBF1D6', scanner: '#E8E1F7', browser: '#FCE0DC', mic: '#FCE0DC',
+  recon: '#FBF1D6', scanner: '#E8E1F7', browser: '#FCE0DC', mic: '#FCE0DC', toggles: '#E8E1F7',
 };
 ---
 {isImage ? (
@@ -109,6 +109,20 @@ const BG: Record<string, string> = {
           <polyline points="134,82 112,106 134,130" />
           <polyline points="186,82 208,106 186,130" />
           <line x1="168" y1="78" x2="152" y2="134" />
+        </g>
+      )}
+      {key === 'toggles' && (
+        <g>
+          <rect x="86" y="26" width="148" height="128" rx="10" fill="#ffffff" />
+          <line x1="104" y1="56" x2="164" y2="56" />
+          <rect x="180" y="46" width="36" height="20" rx="10" fill="#3BAA6E" />
+          <circle cx="206" cy="56" r="6" fill="#ffffff" />
+          <line x1="104" y1="90" x2="154" y2="90" />
+          <rect x="180" y="80" width="36" height="20" rx="10" fill="#ffffff" />
+          <circle cx="190" cy="90" r="6" fill="#111111" />
+          <line x1="104" y1="124" x2="160" y2="124" />
+          <rect x="180" y="114" width="36" height="20" rx="10" fill="#3BAA6E" />
+          <circle cx="206" cy="124" r="6" fill="#ffffff" />
         </g>
       )}
       {key === 'mic' && (

@@ -1,7 +1,7 @@
 ---
 title: Why banks need data products
 summary: Why pipelines and warehouses are no longer enough for reporting and AI.
-date: 2026-11-16
+date: 2026-10-20
 type: essay
 topics: [data-products, platforms]
 series: Data products 101
@@ -10,7 +10,7 @@ takeaways:
   - "A data product is a dataset run like a product: it has an owner, consumers, a contract and a release cycle."
   - Banks feel the need first, because regulators expect every reported number to be traceable to its source.
   - The shift is less about technology than about who owns each definition.
-draft: true
+draft: false
 ---
 
 ## The problem with pipelines
