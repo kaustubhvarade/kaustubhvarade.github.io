@@ -164,3 +164,37 @@ h1, h2, h3 { font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
 .card-cover { transition: border-color 0.15s ease; }
 .card:hover .card-cover { border-color: var(--ink); }
 .card:hover .card-foot a, .card:hover .card-end { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Contents rail: lines in the left margin, panel on hover or click */
+.article { position: relative; }
+.contents { position: absolute; top: 0; bottom: 0; left: -104px; width: 44px; }
+.contents-rail { position: sticky; top: 160px; }
+.contents-toggle { display: flex; flex-direction: column; gap: 9px; width: 44px; padding: 12px 0; border: 0; background: none; color: var(--ink); cursor: pointer; }
+.contents-line { display: block; width: 16px; height: 2px; border-radius: 2px; background: #c8c8c8; transition: width 0.15s ease, background-color 0.15s ease; }
+.contents-line.is-active { width: 22px; background: var(--ink); }
+.contents-icon, .contents-text { display: none; }
+.contents-panel { display: none; position: absolute; left: 34px; top: -6px; z-index: 20; width: 280px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 10px; background: #ffffff; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08); }
+.contents.is-open .contents-panel { display: block; }
+@media (hover: hover) and (min-width: 961px) {
+  .contents-rail:hover .contents-panel, .contents-rail:focus-within .contents-panel { display: block; }
+}
+.contents-label { margin: 0 0 4px; font-size: 13px; color: var(--muted); }
+.contents-panel ul { margin: 0; padding: 0; list-style: none; }
+.contents-panel a { display: block; padding: 6px 0; font-size: 15px; line-height: 1.4; color: var(--muted); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contents-panel a:hover { color: var(--ink); }
+.contents-panel a.is-active { color: var(--ink); font-weight: 600; }
+@media (max-width: 960px) {
+  .contents { position: static; width: auto; margin: 0 0 28px; }
+  .contents-rail { position: static; }
+  .contents-toggle { flex-direction: row; align-items: center; gap: 10px; width: auto; min-height: 44px; padding: 0 16px; border: 1px solid var(--rule); border-radius: 8px; }
+  .contents-line { display: none; }
+  .contents-icon, .contents-text { display: block; }
+  .contents-panel { position: static; width: auto; margin-top: 8px; box-shadow: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Progress log callout on build pages */
+.prose h2#progress-log + ul { margin: 0; padding: 18px 20px 18px 40px; border-radius: 8px; background: var(--callout); font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.prose h2#progress-log + ul li { margin-bottom: 4px; }

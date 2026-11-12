@@ -1,0 +1,86 @@
+---
+interface Props {
+  items: { slug: string; text: string }[];
+}
+
+const { items } = Astro.props;
+---
+{items.length >= 3 && (
+  <div class="contents" data-contents>
+    <div class="contents-rail">
+      <button type="button" class="contents-toggle" aria-expanded="false" aria-controls="contents-panel" aria-label="Contents">
+        {items.map((item) => <span class="contents-line" data-line={item.slug}></span>)}
+        <svg class="contents-icon" viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" stroke="#111111" stroke-width="1.6" stroke-linecap="round">
+          <line x1="1" y1="1" x2="15" y2="1" /><line x1="1" y1="6" x2="15" y2="6" /><line x1="1" y1="11" x2="15" y2="11" />
+        </svg>
+        <span class="contents-text caps">Contents</span>
+      </button>
+      <nav id="contents-panel" class="contents-panel" aria-label="Contents">
+        <p class="contents-label">Contents</p>
+        <ul>
+          {items.map((item) => <li><a href={`#${item.slug}`} data-link={item.slug}>{item.text}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </div>
+)}
+
+<script>
+  function setup(root: HTMLElement) {
+    const toggle = root.querySelector<HTMLButtonElement>('.contents-toggle');
+    if (!toggle) return;
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-link]'));
+    const lines = Array.from(root.querySelectorAll<HTMLElement>('[data-line]'));
+    const ids = links.map((a) => a.dataset.link ?? '');
+
+    const close = () => {
+      root.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    toggle.addEventListener('click', () => {
+      const open = root.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    links.forEach((a) =>
+      a.addEventListener('click', () => {
+        close();
+        a.blur();
+      }),
+    );
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        close();
+        toggle.focus();
+      }
+    });
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top < 160) current = id;
+      }
+      links.forEach((a) => a.classList.toggle('is-active', a.dataset.link === current));
+      lines.forEach((l) => l.classList.toggle('is-active', l.dataset.line === current));
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-contents]').forEach(setup);
+</script>

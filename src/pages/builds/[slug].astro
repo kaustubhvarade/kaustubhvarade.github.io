@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cover from '../../components/Cover.astro';
+import ContentsRail from '../../components/ContentsRail.astro';
 import { getBuilds, STATUS_LABELS } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -10,7 +11,8 @@ export async function getStaticPaths() {
 }
 
 const { b } = Astro.props;
-const { Content } = await render(b);
+const { Content, headings } = await render(b);
+const contents = headings.filter((h) => h.depth === 2).map((h) => ({ slug: h.slug, text: h.text }));
 const kind = b.data.status === 'concept' ? 'Concept prototype' : 'Project';
 ---
 <Base title={b.data.title} description={b.data.summary}>
@@ -26,6 +28,7 @@ const kind = b.data.status === 'concept' ? 'Concept prototype' : 'Project';
       <dt>Stack</dt><dd>{b.data.stack.join(' · ')}</dd>
       {b.data.link && <><dt>Link</dt><dd><a class="caps" href={b.data.link}>{b.data.linkLabel ?? 'Open'} →</a></dd></>}
     </dl>
+    <ContentsRail items={contents} />
     <div class="prose"><Content /></div>
   </article>
 </Base>

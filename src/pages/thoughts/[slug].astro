@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cover from '../../components/Cover.astro';
+import ContentsRail from '../../components/ContentsRail.astro';
 import { TOPIC_MOTIFS } from '../../data/topics';
 import { getThoughts, TYPE_LABELS, topicLabels, formatDate, lengthLabel, isMedia, youtubeId } from '../../lib/content';
 
@@ -12,7 +13,7 @@ export async function getStaticPaths() {
 
 const { t, all } = Astro.props;
 const { Content, headings } = await render(t);
-const toc = headings.filter((h) => h.depth === 2);
+const contents = headings.filter((h) => h.depth === 2).map((h) => ({ slug: h.slug, text: h.text }));
 const motif = t.data.type === 'talk' ? 'mic' : TOPIC_MOTIFS[t.data.topics[0]];
 const video = youtubeId(t.data.youtube);
 const next = t.data.series && t.data.part
@@ -35,21 +36,14 @@ const next = t.data.series && t.data.part
       <dt>Length</dt><dd>{lengthLabel(t)}</dd>
     </dl>
 
+    <ContentsRail items={contents} />
+
     {video ? (
       <div class="video">
         <iframe src={`https://www.youtube-nocookie.com/embed/${video}`} title={t.data.title} loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
       </div>
     ) : isMedia(t) && (
       <div class="video video-empty"><p>Video coming soon</p></div>
-    )}
-
-    {toc.length > 1 && (
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
-          {toc.map((h, i) => <li><a class="caps" href={`#${h.slug}`}>{i + 1}. {h.text}</a></li>)}
-        </ol>
-      </nav>
     )}
 
     {t.data.takeaways && (
