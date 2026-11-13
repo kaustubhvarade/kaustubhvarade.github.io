@@ -3,10 +3,10 @@ import Base from '../layouts/Base.astro';
 import ThoughtCard from '../components/ThoughtCard.astro';
 import BuildCard from '../components/BuildCard.astro';
 import { SITE } from '../data/site';
-import { getThoughts, getBuilds } from '../lib/content';
+import { getHomeThoughts, getHomeBuilds } from '../lib/content';
 
-const thoughts = (await getThoughts()).slice(0, 3);
-const builds = (await getBuilds()).slice(0, 3);
+const thoughts = await getHomeThoughts();
+const builds = await getHomeBuilds();
 ---
 <Base>
   <section class="hero">
